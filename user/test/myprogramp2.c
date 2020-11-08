@@ -12,15 +12,16 @@ void die(char *msg)
 
 int main(int argc, char const *argv[])
 {
+    struct sched_param param;
     cpu_set_t *mask;
     pid_t pid;
     int i;
 
     mask = CPU_ALLOC(1);
     CPU_ZERO(mask);
-    CPU_SET(2, mask); 
+    CPU_SET(0, mask); 
 
-    for (i = 0; i < 10; i++) {
+    for (i = 0; i < 11; i++) {
         pid = fork();
         if (pid < 0) {
             die("fork() failed!");
@@ -31,16 +32,19 @@ int main(int argc, char const *argv[])
                 die("sched_setaffinity() failed");
             if (i < 5)
                 nice(10);
-            else
+            else if (i < 10)
                 nice(14);
-            
+            else {
+                // param.sched_priority = sched_get_priority_max(sched_getscheduler(0));
+                param.sched_priority = 99;
+                sched_setscheduler(0, SCHED_FIFO, &param);
+            }
             break;
         }
 
     }
     if (pid > 0)
         sleep(100);
-
     while (1);
 
     return 0;

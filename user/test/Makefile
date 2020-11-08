@@ -2,14 +2,15 @@ CC = gcc
 CFLAGS = -g -Wall -Werror
 LDFLAGS = -g -lpthread
 
-TARGETS = myprogram
-OBJS = myprogram.o
+SRCS = $(wildcard *.c)
+TARGETS = $(patsubst %.c, %, $(SRCS))
 
-$(TARGETS):
-$(OBJS):
+all: $(TARGETS)
+ 
+$(TARGETS): %:%.c
+	$(CC) $< $(CFLAGS) -o $@
 
-PHONY += clean
+.PHONY: clean all
 clean:
-	rm -rf $(TARGETS) a.out *.o *.order
+	rm -rf $(TARGETS)
 
-.PHONY: $(PHONY)
