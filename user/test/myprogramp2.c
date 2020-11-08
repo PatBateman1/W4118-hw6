@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
 
     mask = CPU_ALLOC(1);
     CPU_ZERO(mask);
-    CPU_SET(0, mask); 
+    CPU_SET(2, mask); 
 
     for (i = 0; i < 11; i++) {
         pid = fork();
@@ -35,7 +35,6 @@ int main(int argc, char const *argv[])
             else if (i < 10)
                 nice(14);
             else {
-                // param.sched_priority = sched_get_priority_max(sched_getscheduler(0));
                 param.sched_priority = 99;
                 sched_setscheduler(0, SCHED_FIFO, &param);
             }
