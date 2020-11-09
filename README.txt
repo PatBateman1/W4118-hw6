@@ -56,25 +56,15 @@ part1:
 		MiB Swap:   8190.0 total,   8190.0 free,      0.0 used.   6732.7 avail Mem 
 
 		PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                                                      
-		1577 root      rt   0    2276     76      0 R  99.7   0.0   0:10.33 ./myprogramp2                                                                
-			1 root      20   0  169468  10080   7804 S   0.0   0.1   0:00.87 /sbin/init                                                                   
-			2 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [kthreadd]                                                                   
-			3 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [rcu_gp]     
-
-
-		and the part result of the ps auxf command:
-
-		bateman    942  0.0  0.0   9012  5864 pts/2    Ss   09:03   0:00  |       \_ -bash
-		root      1565  0.0  0.0  10244  3900 pts/2    S+   09:27   0:00  |           \_ sudo ./myprogramp2
-		root      1566  0.0  0.0   2276   740 pts/2    S+   09:27   0:00  |               \_ ./myprogramp2
-		root      1567  0.0  0.0   2276    76 pts/2    RN+  09:27   0:00  |                   \_ ./myprogramp2
-		root      1568  0.0  0.0   2276    76 pts/2    RN+  09:27   0:00  |                   \_ ./myprogramp2
-		root      1569  0.0  0.0   2276    76 pts/2    RN+  09:27   0:00  |                   \_ ./myprogramp2
-		root      1570  0.0  0.0   2276    76 pts/2    RN+  09:27   0:00  |                   \_ ./myprogramp2
-		root      1571  0.0  0.0   2276    76 pts/2    RN+  09:27   0:00  |                   \_ ./myprogramp2
-		root      1572  0.0  0.0   2276    76 pts/2    RN+  09:27   0:00  |                   \_ ./myprogramp2
-		root      1573  0.0  0.0   2276    76 pts/2    RN+  09:27   0:00  |                   \_ ./myprogramp2
-		root      1574  0.0  0.0   2276    76 pts/2    RN+  09:27   0:00  |                   \_ ./myprogramp2
-		root      1575  0.0  0.0   2276    76 pts/2    RN+  09:27   0:00  |                   \_ ./myprogramp2
-		root      1576  0.0  0.0   2276    76 pts/2    RN+  09:27   0:00  |                   \_ ./myprogramp2
-		root      1577 99.6  0.0   2276    76 pts/2    R+   09:27   1:18  |                   \_ ./myprogramp2
+		8348 root      20   0    2276    736    676 S   0.0   0.0   0:00.00 ./myprogramp2                                                                
+		8349 root      30  10    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+		8350 root      30  10    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+		8351 root      30  10    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+		8352 root      30  10    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+		8353 root      20   0    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+		8354 root      20   0    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+		8355 root      20   0    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+		8356 root      20   0    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+		8357 root      20   0    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+		8358 root      34  14    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+		8359 root      rt   0    2276     76      0 R 100.0   0.0   1:04.97 ./myprogramp2  
