@@ -31,7 +31,21 @@ Describe how you created a real-time priority task.
 The output of diff or diffconfig when comparing the config files for your 
 mainline fallback kernel and your MuQSS kernel
 
-    /* TODO */
+output of diffconfig:
+    -CFS_BANDWIDTH y
+	-CGROUP_CPUACCT y
+	-FAIR_GROUP_SCHED y
+	-NUMA_BALANCING y
+	-NUMA_BALANCING_DEFAULT_ENABLED y
+	-RT_GROUP_SCHED n
+	-SCHED_AUTOGROUP y
+	+RQ_MC y
+	+RQ_NONE n
+	+RQ_SMP n
+	+RQ_SMT n
+	+SCHED_MUQSS y
+	+SHARERQ 2
+	+SMT_NICE y
 
 =================================== P2Q1 end ===================================
 
@@ -39,7 +53,14 @@ mainline fallback kernel and your MuQSS kernel
 Indicate you successfully patched, built, and booted into your MuQSS-enabled 
 Linux kernel.
 
-    /* TODO */ 
+	[    0.194489] MuQSS locality CPU 0 to 1: 2
+	[    0.194491] MuQSS locality CPU 0 to 2: 2
+	[    0.194491] MuQSS locality CPU 0 to 3: 2
+	[    0.194492] MuQSS locality CPU 1 to 2: 2
+	[    0.194493] MuQSS locality CPU 1 to 3: 2
+	[    0.194494] MuQSS locality CPU 2 to 3: 2
+	[    0.196027] MuQSS runqueue share type MC total runqueues: 29
+	[    0.876152] MuQSS CPU scheduler v0.180 by Con Kolivas.
 
 =================================== P2Q2 end ===================================
 
