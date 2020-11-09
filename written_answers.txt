@@ -11,7 +11,34 @@ Describe how you created the 70%/30% split.
     - Indicate if you needed root privileges for any of those commands
     - Include the top output
 
-    /* TODO */ 
+    In this task, we wrote a c program called myprogram.c (in user/test/),
+	in this program, we created a process and forked 10 child processes, bond
+	the 10 processes to cpu2, then we set the first 5 child processes' nice 
+	value to 10 and last 5 processes' nice value to 14. 
+
+	top - 09:16:17 up 13 min,  3 users,  load average: 0.82, 0.22, 0.12
+	Tasks: 179 total,  11 running, 168 sleeping,   0 stopped,   0 zombie
+	%Cpu0  :   0.3/0.0     0[                                                   ]
+	%Cpu1  :   0.0/0.0     0[                                                   ]
+	%Cpu2  : 100.0/0.0   100[|||||||||||||||||||||||||||||||||||||||||||||||||||]
+	%Cpu3  :   0.0/0.0     0[                                                   ]
+	MiB Mem :   7973.6 total,   5296.2 free,    919.1 used,   1758.3 buff/cache
+	MiB Swap:   8190.0 total,   8190.0 free,      0.0 used.   6744.3 avail Mem 
+
+	PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                                                      
+	1472 bateman   30  10    2276     80      0 R  14.3   0.0   0:01.27 myprogram                                                                    
+	1476 bateman   30  10    2276     80      0 R  14.3   0.0   0:01.27 myprogram                                                                    
+	1473 bateman   30  10    2276     80      0 R  14.0   0.0   0:01.26 myprogram                                                                    
+	1474 bateman   30  10    2276     80      0 R  14.0   0.0   0:01.26 myprogram                                                                    
+	1475 bateman   30  10    2276     80      0 R  14.0   0.0   0:01.26 myprogram                                                                    
+	1477 bateman   34  14    2276     80      0 R   6.0   0.0   0:00.52 myprogram                                                                    
+	1480 bateman   34  14    2276     80      0 R   6.0   0.0   0:00.52 myprogram                                                                    
+	1478 bateman   34  14    2276     80      0 R   5.7   0.0   0:00.51 myprogram                                                                    
+	1479 bateman   34  14    2276     80      0 R   5.7   0.0   0:00.51 myprogram                                                                    
+	1481 bateman   34  14    2276     80      0 R   5.7   0.0   0:00.51 myprogram                                                                    
+		1 root      20   0  169468  10080   7804 S   0.0   0.1   0:00.87 systemd                                                                      
+		2 root      20   0       0      0      0 S   0.0   0.0   0:00.00 kthreadd
+
 
 =================================== P1Q1 end ===================================
 
@@ -21,7 +48,34 @@ Describe how you created a real-time priority task.
     - Indicate if you needed root privileges for any of those commands
     - Include the top output
 
-    /* TODO */ 
+    In this task, we modified the task1's program into myprogramp2.c: we add another
+	child process, i.e. 11st child process, the first 10 child processes remained 
+	the same. In the last child process, we changed the scheduler policy to 
+	SCHED_FIFO and set the sched_priority to max: 99. Finally, we ran the myprogramp2 with
+	sudo: sudo ./myprogramp2.
+
+	top - 09:27:36 up 24 min,  3 users,  load average: 10.71, 9.76, 5.70
+	Tasks: 180 total,  14 running, 166 sleeping,   0 stopped,   0 zombie
+	%Cpu0  :   0.0/0.0     0[                                                        ]
+	%Cpu1  :   0.3/0.0     0[                                                        ]
+	%Cpu2  : 100.0/0.0   100[||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
+	%Cpu3  :   0.0/0.0     0[                                                        ]
+	MiB Mem :   7973.6 total,   5283.2 free,    930.3 used,   1760.0 buff/cache
+	MiB Swap:   8190.0 total,   8190.0 free,      0.0 used.   6732.7 avail Mem 
+
+	PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                                                      
+	8348 root      20   0    2276    736    676 S   0.0   0.0   0:00.00 ./myprogramp2                                                                
+	8349 root      30  10    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+	8350 root      30  10    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+	8351 root      30  10    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+	8352 root      30  10    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+	8353 root      20   0    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+	8354 root      20   0    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+	8355 root      20   0    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+	8356 root      20   0    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+	8357 root      20   0    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+	8358 root      34  14    2276     76      0 R   0.0   0.0   0:00.00 ./myprogramp2                                                                
+	8359 root      rt   0    2276     76      0 R 100.0   0.0   1:04.97 ./myprogramp2  
 
 =================================== P1Q2 end ===================================
 

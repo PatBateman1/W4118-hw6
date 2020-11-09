@@ -9,6 +9,8 @@ or not. You may also want to include anything else you would like to
 communicate to the grader, such as extra functionality you implemented or how
 you tried to fix your non-working code.
 
+Zixiao Zhu (zz2700), Zhaoxuan Jiang (zj2267)
+
 part1:
 	task1:
 		In this task, we wrote a c program called myprogram.c (in user/test/),
