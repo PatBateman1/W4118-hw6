@@ -38,7 +38,7 @@ int main(int argc, char const *argv[])
 
 	}
 	if (pid > 0)
-		sleep(100);
+		sleep(10000);
 
 	while (1);
 
