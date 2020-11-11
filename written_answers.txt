@@ -334,6 +334,10 @@ Find the current value of jiffies in your system.
 ================================== P5Q5 start ==================================
 What are Niffies? How do they differ from Jiffies?
 
-    /* TODO */ 
+    Niffies are a monotonic forward moving timer not unlike the "jiffies" but are
+	of nanosecond resolution. Niffies are calculated per-runqueue from the high
+	resolution TSC timers, and in order to maintain fairness are synchronised
+	between CPUs whenever both runqueues are locked concurrently.
+	(from https://mls.akdeniz.edu.tr/git/milislinux/kernel-patches/raw/commit/a4312d946aa1681e2b8a166b09ac3925cd7e5c76/v5.4.14-zen1.patch)
 
 =================================== P5Q5 end ===================================
