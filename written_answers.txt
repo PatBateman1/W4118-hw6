@@ -157,7 +157,18 @@ without root privileges, and describe the differences.
 Verify Con Kolivas' claim by timing the kernel build-time in both your fallback
 and your MuQSS-patched kernels.
     
-    /* TODO */ 
+    muqss time:
+		real	5m7.686s
+		user	19m9.082s
+		sys		2m10.313s
+	
+	cfs time:
+		real	5m13.425s
+		user	17m14.517s
+		sys	    2m21.756s
+
+muqss kernel has a longer user time but shorter real time, which may means muqss
+has a better interaction and better cpu usage.
 
 =================================== P4Q1 end ===================================
 
@@ -165,7 +176,103 @@ and your MuQSS-patched kernels.
 Design an experiment that you think will highlight MuQSS’s strength. Perform 
 the experiment and report your findings.
 
-    /* TODO */ 
+We use john-the-ripper in Kolivas’s own benchmarks, which is a cpu intensive work. 
+The muqss has slightly better performance, it may because that the muqss uses skiplist
+which is simpler than red black tree, and muqss uses try lock which is non-blocking
+rather than lock. So muqss has a better cpu usage.
+
+muqss:
+	John The Ripper 1.9.0-jumbo-1:
+		pts/john-the-ripper-1.7.2 [Test: Blowfish]
+		Test 1 of 2
+		Estimated Trial Run Count:    3                      
+		Estimated Test Run-Time:      17 Minutes             
+		Estimated Time To Completion: 33 Minutes [02:49 EST] 
+			Started Run 1 @ 02:17:39
+			Started Run 2 @ 02:18:13
+			Started Run 3 @ 02:22:36
+
+		Test: Blowfish:
+			6718
+			6685
+			6638
+
+		Average: 6680 Real C/S
+		Deviation: 0.60%
+
+	John The Ripper 1.9.0-jumbo-1:
+		pts/john-the-ripper-1.7.2 [Test: MD5]
+		Test 2 of 2
+		Estimated Trial Run Count:    3                      
+		Estimated Time To Completion: 17 Minutes [02:39 EST] 
+			Started Run 1 @ 02:23:17
+			Started Run 2 @ 02:24:21
+			Started Run 3 @ 02:25:25
+
+		Test: MD5:
+			400307
+			387584
+			385126
+
+		Average: 391006 Real C/S
+		Deviation: 2.08%
+
+cfs:
+	John The Ripper 1.9.0-jumbo-1:
+		pts/john-the-ripper-1.7.2 [Test: Blowfish]
+		Test 1 of 2
+		Estimated Trial Run Count:    3                      
+		Estimated Test Run-Time:      10 Minutes             
+		Estimated Time To Completion: 20 Minutes [02:48 EST] 
+			Started Run 1 @ 02:28:52
+			Started Run 2 @ 02:29:26
+			Started Run 3 @ 02:30:00
+			Started Run 4 @ 02:30:34 *
+			Started Run 5 @ 02:31:09 *
+			Started Run 6 @ 02:31:43 *
+			Started Run 7 @ 02:32:17 *
+			Started Run 8 @ 02:32:51 *
+			Started Run 9 @ 02:33:25 *
+			Started Run 10 @ 02:33:59 *
+			Started Run 11 @ 02:34:33 *
+			Started Run 12 @ 02:35:07 *
+
+		Test: Blowfish:
+			6435
+			5914
+			6640
+			6624
+			6478
+			6502
+			6404
+			6328
+			6391
+			6447
+			6321
+			6468
+
+		Average: 6413 Real C/S
+		Deviation: 2.89%
+		Samples: 12
+
+	John The Ripper 1.9.0-jumbo-1:
+		pts/john-the-ripper-1.7.2 [Test: MD5]
+		Test 2 of 2
+		Estimated Trial Run Count:    3                      
+		Estimated Time To Completion: 10 Minutes [02:45 EST] 
+			Started Run 1 @ 02:35:54
+			Started Run 2 @ 02:36:58
+			Started Run 3 @ 02:38:02
+
+		Test: MD5:
+			401715
+			382592
+			382259
+
+		Average: 388855 Real C/S
+		Deviation: 2.86%
+
+
 
 =================================== P4Q2 end ===================================
 
