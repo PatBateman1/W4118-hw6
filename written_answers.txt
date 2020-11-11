@@ -281,21 +281,35 @@ cfs:
 ================================== P5Q1 start ==================================
 Briefly describe the advantages and disadvantages of a larger HZ.
 
-    /* TODO */ 
+    advantages:
+		1. kernel timers would have a better resolution and accuracy.
+		2. system calls which have timeout would have a higher accuracy.
+		3. measurements as recourses cost and system runtime would have a finer resolution.
+		4. higher accuracy of processes' preemption.
+
+	disadvantages:
+		1. higher HZ means more time interrupt program in a given time which brings
+		heavier workloads to cpu.
+		2. higher HZ may also flushes cpu's cache more frequently which leads to
+		lower performance.
+
 
 =================================== P5Q1 end ===================================
 
 ================================== P5Q2 start ==================================
 What is the HZ currently configured for your running Linux system?
 
-    /* TODO */ 
+    HZ is 250.
+	We craeted a c program named p5.c in user/test/p5. this program include <asm/param.h>
+	and print the HZ.
 
 =================================== P5Q2 end ===================================
 
 ================================== P5Q3 start ==================================
 What are jiffies? Explain the relationship between jiffies, HZ, and time.
 
-    /* TODO */ 
+    jiffies hold the number of ticks since the system booted. 
+	the increment of jiffies a second is HZ, and the system runtime is jiffies/HZ (seconds).
 
 =================================== P5Q3 end ===================================
 
@@ -308,7 +322,12 @@ Find the current value of jiffies in your system.
     - Why does this large difference exist? (Hint: in 32-bit Linux systems,
       jiffies is a 32-bit value.)
 
-    /* TODO */ 
+    jiffies is 4297544631
+	1. 4297544631 / 250 / 60 = 286502 minutes.
+	2. uptime: 176 minutes. so jiffies doesn’t match the uptime.
+		formula: (jiffies - (unsigned long)(unsigned int) (-300*HZ)) / HZ / 60 = minutes。
+	3. jiffies would be initialized as a 32-bit value (unsigned long)(unsigned int) (-300*HZ), 
+	but in 64-bit system, it won't overflow.
 
 =================================== P5Q4 end ===================================
 
