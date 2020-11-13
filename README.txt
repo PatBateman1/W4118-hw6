@@ -8,3 +8,9 @@ The description should indicate whether your solution for the part is working
 or not. You may also want to include anything else you would like to
 communicate to the grader, such as extra functionality you implemented or how
 you tried to fix your non-working code.
+
+Zixiao Zhu (zz2700)
+Zhaoxuan Jiang (zj2267)
+
+part6:
+	Our solution works, the ps command doesn't show SCH 7 which is freezer scheduler.

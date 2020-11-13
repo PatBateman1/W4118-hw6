@@ -482,7 +482,7 @@ struct sched_entity {
 
 struct sched_freezer_entity {
 	struct list_head run_list;
-}
+};
 
 struct sched_rt_entity {
 	struct list_head		run_list;
