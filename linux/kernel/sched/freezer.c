@@ -1,5 +1,5 @@
 #include "sched.h"
-
+#include <linux/list.h>
 #include <trace/events/sched.h>
 
 void init_freezer_rq(struct freezer_rq *fz_rq)
@@ -9,7 +9,11 @@ void init_freezer_rq(struct freezer_rq *fz_rq)
 
 void __init init_sched_fz_class(void)
 {
+	unsigned int i;
 
+	for_each_possible_cpu(i)
+		zalloc_cpumask_var_node(&per_cpu(local_cpu_mask_dl, i),
+					GFP_KERNEL, cpu_to_node(i));
 }
 
 static void enqueue_task_fz(struct rq *rq, struct task_struct *p, int flags)
