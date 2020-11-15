@@ -2337,9 +2337,10 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
 		return -EAGAIN;
 	else if (rt_prio(p->prio))
 		p->sched_class = &rt_sched_class;
-	else
+	else if (fair_policy(p->policy))
 		p->sched_class = &fair_sched_class;
-
+	else
+		p->sched_class = &freezer_sched_class;
 	init_entity_runnable_average(&p->se);
 
 	/*
@@ -4098,8 +4099,11 @@ static void __setscheduler(struct rq *rq, struct task_struct *p,
 		p->sched_class = &dl_sched_class;
 	else if (rt_prio(p->prio))
 		p->sched_class = &rt_sched_class;
+	else if (p->policy == SCHED_FREEZER)
+		p->sched_class = &freezer_sched_class;
 	else
 		p->sched_class = &fair_sched_class;
+	
 }
 
 /*
@@ -4142,12 +4146,16 @@ recheck:
 	} else {
 		reset_on_fork = !!(attr->sched_flags & SCHED_FLAG_RESET_ON_FORK);
 
-		if (!valid_policy(policy))
+		if (!valid_policy(policy)) {
+			// printk("11111111\n");
 			return -EINVAL;
+		}
 	}
 
-	if (attr->sched_flags & ~(SCHED_FLAG_ALL | SCHED_FLAG_SUGOV))
+	if (attr->sched_flags & ~(SCHED_FLAG_ALL | SCHED_FLAG_SUGOV)) {
+		// printk("2222222\n");
 		return -EINVAL;
+	}
 
 	/*
 	 * Valid priorities for SCHED_FIFO and SCHED_RR are
@@ -4155,11 +4163,16 @@ recheck:
 	 * SCHED_BATCH and SCHED_IDLE is 0.
 	 */
 	if ((p->mm && attr->sched_priority > MAX_USER_RT_PRIO-1) ||
-	    (!p->mm && attr->sched_priority > MAX_RT_PRIO-1))
+	    (!p->mm && attr->sched_priority > MAX_RT_PRIO-1)) {
+		// printk("33333333\n");
 		return -EINVAL;
+		}
 	if ((dl_policy(policy) && !__checkparam_dl(attr)) ||
-	    (rt_policy(policy) != (attr->sched_priority != 0)))
+	    (rt_policy(policy) != (attr->sched_priority != 0))) {
+		// printk("444444\n");
+		// printk("policy: %d\n", policy);
 		return -EINVAL;
+		}
 
 	/*
 	 * Allow unprivileged RT tasks to decrease priority:
@@ -4213,8 +4226,10 @@ recheck:
 	}
 
 	if (user) {
-		if (attr->sched_flags & SCHED_FLAG_SUGOV)
+		if (attr->sched_flags & SCHED_FLAG_SUGOV) {
+			printk("55555555\n");
 			return -EINVAL;
+		}
 
 		retval = security_task_setscheduler(p);
 		if (retval)
@@ -5168,6 +5183,7 @@ SYSCALL_DEFINE1(sched_get_priority_max, int, policy)
 	case SCHED_DEADLINE:
 	case SCHED_NORMAL:
 	case SCHED_BATCH:
+	case SCHED_FREEZER:
 	case SCHED_IDLE:
 		ret = 0;
 		break;
@@ -5195,6 +5211,7 @@ SYSCALL_DEFINE1(sched_get_priority_min, int, policy)
 	case SCHED_DEADLINE:
 	case SCHED_NORMAL:
 	case SCHED_BATCH:
+	case SCHED_FREEZER:
 	case SCHED_IDLE:
 		ret = 0;
 	}
@@ -5879,7 +5896,7 @@ void __init sched_init_smp(void)
 
 	init_sched_rt_class();
 	init_sched_dl_class();
-	// init_sched_fz_class();
+	init_sched_fz_class();
 
 	sched_smp_initialized = true;
 }

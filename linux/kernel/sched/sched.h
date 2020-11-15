@@ -4,6 +4,8 @@
  */
 #include <linux/sched.h>
 
+#include <linux/sched/freezer.h>
+
 #include <linux/sched/autogroup.h>
 #include <linux/sched/clock.h>
 #include <linux/sched/coredump.h>
@@ -171,10 +173,16 @@ static inline int dl_policy(int policy)
 {
 	return policy == SCHED_DEADLINE;
 }
+
+static inline int fz_policy(int policy)
+{
+	return policy == SCHED_FREEZER;
+}
+
 static inline bool valid_policy(int policy)
 {
 	return idle_policy(policy) || fair_policy(policy) ||
-		rt_policy(policy) || dl_policy(policy);
+		rt_policy(policy) || dl_policy(policy) || fz_policy(policy);
 }
 
 static inline int task_has_rt_policy(struct task_struct *p)
@@ -185,6 +193,11 @@ static inline int task_has_rt_policy(struct task_struct *p)
 static inline int task_has_dl_policy(struct task_struct *p)
 {
 	return dl_policy(p->policy);
+}
+
+static inline int task_has_fz_policy(struct task_struct *p)
+{
+	return fz_policy(p->policy);
 }
 
 #define cap_scale(v, s) ((v)*(s) >> SCHED_CAPACITY_SHIFT)
