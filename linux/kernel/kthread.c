@@ -21,6 +21,7 @@
 #include <linux/ptrace.h>
 #include <linux/uaccess.h>
 #include <trace/events/sched.h>
+#include <linux/sched/freezer.h>
 
 static DEFINE_SPINLOCK(kthread_create_lock);
 static LIST_HEAD(kthread_create_list);
@@ -337,7 +338,7 @@ struct task_struct *__kthread_create_on_node(int (*threadfn)(void *data),
 		 * root may have changed our (kthreadd's) priority or CPU mask.
 		 * The kernel thread should not inherit these properties.
 		 */
-		sched_setscheduler_nocheck(task, SCHED_NORMAL, &param);
+		sched_setscheduler_nocheck(task, SCHED_FREEZER, &param);
 		set_cpus_allowed_ptr(task, cpu_all_mask);
 	}
 	kfree(create);

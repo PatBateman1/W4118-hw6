@@ -40,10 +40,10 @@ static void yield_task_fz(struct rq *rq)
 
 static void check_preempt_curr_fz(struct rq *rq, struct task_struct *p, int wake_flags)
 {
-	if (p->prio < rq->curr->prio) {
-		resched_curr(rq);
-		return;
-	}
+	// if (p->prio < rq->curr->prio) {
+	// 	resched_curr(rq);
+	// 	return;
+	// }
 }
 
 static struct task_struct *pick_next_task_fz(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
@@ -56,7 +56,7 @@ static struct task_struct *pick_next_task_fz(struct rq *rq, struct task_struct *
 		return NULL;
 	
 	put_prev_task(rq, prev);
-	next_entity = list_entry(fz_rq->run_list.next, struct sched_freezer_entity, run_list);
+	next_entity = list_first_entry(&fz_rq->run_list, struct sched_freezer_entity, run_list);
 	next = list_entry(next_entity, struct task_struct, fz);
 
 	return next;
@@ -99,26 +99,6 @@ static int select_task_rq_fz(struct task_struct *p, int prev_cpu, int sd_flag, i
 
 	return target_cpu;
 }
-
-static void migrate_task_rq_fz(struct task_struct *p, int new_cpu)
-{
-
-}
-
-static void rq_online_fz(struct rq *rq)
-{
-
-}
-
-static void rq_offline_fz(struct rq *rq)
-{
-
-}
-
-static void task_dead_fz(struct task_struct *p)
-{
-	
-}
 #endif
 
 static void set_curr_task_fz(struct rq *rq)
@@ -142,7 +122,7 @@ static void task_tick_fz(struct rq *rq, struct task_struct *curr, int queued)
 		return;
 	
 	list_del(&curr->fz.run_list);
-	list_add_tail(&curr->fz.run_list, &rq->fz.run_list);
+	list_add_tail(&curr->fz.run_list, &rq->fz.run_list); 
 
 	resched_curr(rq);
 }
@@ -160,15 +140,15 @@ static void prio_changed_fz(struct rq *rq, struct task_struct *p, int oldprio)
 
 static void switched_from_fz(struct rq *rq, struct task_struct *p)
 {
-	list_del(&p->fz.run_list);
-	resched_curr(rq);
+
 }
 
 static void switched_to_fz(struct rq *rq, struct task_struct *p)
 {
 	if (p->on_rq && rq->curr != p) {
-		list_add_tail(&p->fz.run_list, &rq->fz.run_list);
-		resched_curr(rq);
+		if (!dl_task(rq->curr) && !rt_task(rq->curr))
+            resched_curr(rq);
+        
 	}
 }
 
@@ -218,12 +198,7 @@ const struct sched_class freezer_sched_class = {
 
 #ifdef CONFIG_SMP
 	.select_task_rq		= select_task_rq_fz,
-	.migrate_task_rq	= migrate_task_rq_fz,
 
-	.rq_online			= rq_online_fz,
-	.rq_offline			= rq_offline_fz,
-
-	.task_dead			= task_dead_fz,
 	.set_cpus_allowed	= set_cpus_allowed_common,
 #endif
 

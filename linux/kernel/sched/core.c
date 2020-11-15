@@ -19,7 +19,7 @@
 
 #include "pelt.h"
 
-#include <linux/sched/freezer.h>
+#include <linux/freezer.h>
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/sched.h>
@@ -2172,6 +2172,7 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
 
 	INIT_LIST_HEAD(&p->fz.run_list);
 	p->fz.time_slice = FREEZER_TIMESLICE;
+	p->fz.on_rq		= 0;
 
 #ifdef CONFIG_PREEMPT_NOTIFIERS
 	INIT_HLIST_HEAD(&p->preempt_notifiers);
@@ -2317,7 +2318,7 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
 	 */
 	if (unlikely(p->sched_reset_on_fork)) {
 		if (task_has_dl_policy(p) || task_has_rt_policy(p)) {
-			p->policy = SCHED_NORMAL;
+			p->policy = SCHED_FREEZER;
 			p->static_prio = NICE_TO_PRIO(0);
 			p->rt_priority = 0;
 		} else if (PRIO_TO_NICE(p->static_prio) < 0)
@@ -3320,10 +3321,10 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 	 * opportunity to pull in more work from other CPUs.
 	 */
 	if (likely((prev->sched_class == &idle_sched_class ||
-		    prev->sched_class == &fair_sched_class) &&
+		    prev->sched_class == &freezer_sched_class) &&
 		   rq->nr_running == rq->cfs.h_nr_running)) {
 
-		p = fair_sched_class.pick_next_task(rq, prev, rf);
+		p = freezer_sched_class.pick_next_task(rq, prev, rf);
 		if (unlikely(p == RETRY_TASK))
 			goto again;
 
@@ -3844,7 +3845,7 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
 			p->dl.dl_boosted = 0;
 		if (rt_prio(oldprio))
 			p->rt.timeout = 0;
-		p->sched_class = &fair_sched_class;
+		p->sched_class = &freezer_sched_class;
 	}
 
 	p->prio = prio;
@@ -5184,6 +5185,8 @@ SYSCALL_DEFINE1(sched_get_priority_max, int, policy)
 	case SCHED_NORMAL:
 	case SCHED_BATCH:
 	case SCHED_FREEZER:
+		ret = 0;
+		break;
 	case SCHED_IDLE:
 		ret = 0;
 		break;
@@ -5212,6 +5215,8 @@ SYSCALL_DEFINE1(sched_get_priority_min, int, policy)
 	case SCHED_NORMAL:
 	case SCHED_BATCH:
 	case SCHED_FREEZER:
+		ret = 0;
+		break;
 	case SCHED_IDLE:
 		ret = 0;
 	}
@@ -6182,7 +6187,7 @@ void normalize_rt_tasks(void)
 {
 	struct task_struct *g, *p;
 	struct sched_attr attr = {
-		.sched_policy = SCHED_NORMAL,
+		.sched_policy = SCHED_FREEZER,
 	};
 
 	read_lock(&tasklist_lock);
