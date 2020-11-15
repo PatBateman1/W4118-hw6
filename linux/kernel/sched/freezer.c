@@ -65,6 +65,10 @@ static struct task_struct *pick_next_task_fz(struct rq *rq, struct task_struct *
 static void put_prev_task_fz(struct rq *rq, struct task_struct *prev)
 {
 	struct freezer_rq *fz_rq = &rq->fz;
+
+	if(!prev->fz.on_rq)
+		return;
+
 	if (fz_rq->run_list.next == &prev->fz.run_list)
 		return;
 	
@@ -122,9 +126,14 @@ static void set_curr_task_fz(struct rq *rq)
 	rq->curr->fz.time_slice = FREEZER_TIMESLICE;
 }
 
+static void update_curr_fz(struct rq *rq);
+
 static void task_tick_fz(struct rq *rq, struct task_struct *curr, int queued)
 {
-	if (--curr->fz.time_slice)
+	curr->fz.time_slice--;
+	update_curr_fz(rq);
+
+	if (curr->fz.time_slice)
 		return;
 	
 	curr->fz.time_slice = FREEZER_TIMESLICE;
@@ -157,7 +166,7 @@ static void switched_from_fz(struct rq *rq, struct task_struct *p)
 
 static void switched_to_fz(struct rq *rq, struct task_struct *p)
 {
-	if (rq->curr != p) {
+	if (p->on_rq && rq->curr != p) {
 		list_add_tail(&p->fz.run_list, &rq->fz.run_list);
 		resched_curr(rq);
 	}

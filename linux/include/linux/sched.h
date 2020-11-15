@@ -483,6 +483,7 @@ struct sched_entity {
 struct sched_freezer_entity {
 	struct			list_head run_list;
 	unsigned int	time_slice;
+	unsigned short	on_rq;
 };
 
 struct sched_rt_entity {
